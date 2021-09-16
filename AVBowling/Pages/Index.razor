@@ -1,0 +1,82 @@
+﻿@page "/"
+@using AVBowling.Models;
+@inject NavigationManager uriHelper;
+
+
+
+<h1>Bowling Game</h1>
+
+@if (bowlGame == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Frame</th>
+                <th>Roll 1</th>
+                <th>Roll 2</th>
+                <th>Roll 3</th>
+
+                @if (!bowlGame.IsActive)
+                {
+                    <th>Score</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var frame in bowlGame.Frames)
+            {
+                <tr>
+                    <td>@frame.Number</td>
+                    <td>@frame.Rolls.FirstOrDefault(x => x.Number == 1).Score</td>
+                    <td>@(frame.Rolls.FirstOrDefault(x => x.Number == 1).Score == 10?"*":frame.Rolls.FirstOrDefault(x => x.Number == 2).Score)</td>
+                    <td>@(frame.Rolls.FirstOrDefault(x => x.Number == 3) != null?frame.Rolls.FirstOrDefault(x => x.Number == 3).Score:"*")</td>
+                    @if (!bowlGame.IsActive)
+                    {
+                        <td>@(frame.Score)</td>
+                    }
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    @if (bowlGame.IsActive)
+    {
+        <button class="btn btn-primary" @onclick="RollBall">Roll</button>
+    }
+    else
+    {
+        <h2 style="color:green">Your score: @bowlGame.Score</h2>
+        <button class="btn btn-primary" @onclick="@(() => {uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true); })">Play again</button>
+    }
+
+}
+
+
+
+@code {
+
+    private BowlGame bowlGame = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        bowlGame = new BowlGame();
+    }
+
+
+    private void RollBall()
+    {
+        bowlGame.Roll();
+
+    }
+
+    private void Reload()
+    {
+        bowlGame.Roll();
+
+    }
+}
