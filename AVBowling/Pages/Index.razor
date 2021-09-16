@@ -32,7 +32,7 @@ else
                 <tr>
                     <td>@frame.Number</td>
                     <td>@frame.Rolls.FirstOrDefault(x => x.Number == 1).Score</td>
-                    <td>@(frame.Rolls.FirstOrDefault(x => x.Number == 1).Score == 10?"*":frame.Rolls.FirstOrDefault(x => x.Number == 2).Score)</td>
+                    <td>@(frame.Rolls.FirstOrDefault(x => x.Number == 1).Score == 10 && frame.Number <10 ?"*":frame.Rolls.FirstOrDefault(x => x.Number == 2).Score)</td>
                     <td>@(frame.Rolls.FirstOrDefault(x => x.Number == 3) != null?frame.Rolls.FirstOrDefault(x => x.Number == 3).Score:"*")</td>
                     @if (!bowlGame.IsActive)
                     {
